@@ -50,7 +50,7 @@ systemctl reload firewalld
 
 ====================================================================================================================================
 
-hardenizacion del middelware
+hardenizacion del middleware
 
 cd /opt/tomcat/webapps/
 rm -rf *
@@ -94,3 +94,4 @@ kill -9 #PID
 rm -rf /usr/local/tomcat8/temp/tomcat.pid
 systemctl start tomcat.service
 ====================================================================================================================================
+
