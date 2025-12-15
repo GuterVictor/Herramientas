@@ -74,8 +74,6 @@ vi /opt/tomcat/conf/server.xml
       deployOnStartup="true">
 </Host>
 
-
-
 Validaciones de hardenización
 
 ll /opt/tomcat/webapps
@@ -87,7 +85,6 @@ vi /opt/tomcat/conf/server.xml
 systemctl restart tomcat.service
 curl -i http://localhost:8080
 
-
 ====================================================================================================================================
 EN CASO DE QUE ESTE ROTO
 sudo -u tomcat /usr/local/tomcat8/bin/catalina.sh start  --> Validar si no esta roto a nivel configuración
@@ -96,68 +93,4 @@ ps -ef | grep tomcat
 kill -9 #PID
 rm -rf /usr/local/tomcat8/temp/tomcat.pid
 systemctl start tomcat.service
-
-====================================================================================================================================
-
-seguros ALL=(ALL) NOPASSWD: /bin/systemctl start tomcat.service, /bin/systemctl stop tomcat.service, /bin/systemctl status tomcat.service, /bin/systemctl restart tomcat.service, /opt/tomcat/bin/startup.sh, /opt/tomcat/bin/shutdown.sh
-
-
-====================================================================================================================================
-
-Segregación de permisos
-usermod -aG tomcat seguros
-chmod 750 /opt/tomcat
-chmod 750 /opt/tomcat/conf/
-chmod 660 /opt/tomcat/conf/server.xml
-chmod 770 /opt/tomcat/webapps/
-chmod g+s /opt/tomcat/webapps/
-chmod 770 /opt/tomcat/logs
-chmod g+w /opt/tomcat/logs/*.log /opt/tomcat/logs/catalina.out
-
-cd /opt/tomcat/conf
-chmod 660 context.xml
-mkdir -p /opt/tomcat/certificados /opt/tomcat/seguros/
-chmod 770 /opt/tomcat/certificados/ /opt/tomcat/seguros/
-chmod g+s /opt/tomcat/certificados/ /opt/tomcat/seguros/
-chown tomcat:tomcat /opt/tomcat/certificados/ /opt/tomcat/seguros/
-
-chmod 660 /opt/tomcat/conf/*
-chmod 750 /opt/tomcat/conf/Catalina/
-
-mkdir -p /opt/tomcat/db/ /opt/tomcat/logs/insurances/ /opt/tomcat/logs/sima/ /opt/tomcat/logs/mobilBank/ /opt/tomcat/certificados
-chown seguros:tomcat /opt/tomcat/logs/insurances/ /opt/tomcat/logs/sima/ /opt/tomcat/logs/mobilBank/
-chown tomcat:tomcat /opt/tomcat/db/
-chmod 770 /opt/tomcat/db/ /opt/tomcat/logs/insurances/ /opt/tomcat/logs/sima/ /opt/tomcat/logs/mobilBank/
-chmod g+s /opt/tomcat/logs/insurances/ /opt/tomcat/logs/sima/ /opt/tomcat/logs/mobilBank/
-chmod 770 /opt/tomcat/logs/insurances/ /opt/tomcat/logs/sima/ /opt/tomcat/logs/mobilBank/
-chmod g+s /opt/tomcat/logs/
-chmod g+s /opt/tomcat/db/
-chmod g+s /opt/tomcat/certificados/
-
-
-====================================================================================================================================
-
-usermod -l nuevo_usuario viejo_usuario
-usermod -d /home/nuevo_usuario -m nuevo_usuario
-groupmod -n nuevo_usuario viejo_usuario
-
-usermod -l usrdes usrseg
-usermod -d /home/usrdes -m usrdes
-groupmod -n usrdes usrseg
-
-====================================================================================================================================
-vi ~/.bashrc
-=====================================================
-tomcat-start() {
-    echo "Iniciando Tomcat..."
-    sudo -u tomcat /opt/tomcat/bin/startup.sh
-}
-
-tomcat-stop() {
-    echo "Deteniendo Tomcat..."
-    sudo -u tomcat /opt/tomcat/bin/shutdown.sh
-}
-=====================================================
-source ~/.bashrc
-
 ====================================================================================================================================
